@@ -2,9 +2,20 @@
 #include <string>
 #include <fstream>
 #include <vector>
-#include "budget.h"
 
+int choice;
+double dollars;
+std::string confirm;
+std::string bill;
 
+std::vector<std::pair<std::string, double>> bills{};
+
+void editBudget();
+void total();
+void balance();
+void income();
+void menu();
+int exit();
 
 int main(){
     std::string start;
@@ -21,6 +32,7 @@ int main(){
     else{
         menu();
     }
+    return 0;
 }
 void menu(){
     std::cout << "\nMain menu" << std::endl;
@@ -42,8 +54,10 @@ void menu(){
 	    }
         if (choice == 4){
             total();
+        }	
+        else{
+            exit();
         }
-	
 }
 void editBudget(){ // every time you run this function it will replace the old budget data.
     while (bill != "done"){
@@ -84,7 +98,7 @@ void total(){
     read.close();
     menu();
 }
-void income(){
+void income(){ 
     std::string answer;
     std::ifstream read("Income");
     double income; 
@@ -96,23 +110,29 @@ void income(){
         std::cin >> answer;
         if (answer != "yes"){
             read.close();
+            menu();
         }
         if (answer == "yes"){
+            read.close();
             std::cout << "What is your new income?\n";
             std::cout << "Income: ";
-            std::cin >> income;
-            read.close();
+            std::cin >> dollars;
+            std::ofstream file("Income");
+	        file << dollars;
+	        file.close();
+            menu();
         }
+        
+    }
+    else{
+	    std::cout << "\nHow much is your Income\n";
+	    std::cout << "Income: ";
+	    std::cin >> dollars;
+        std::ofstream file("Income");
+	    file << dollars;
+	    file.close();
         menu();
     }
-	std::cout << "\nHow much is your Income\n";
-	std::cout << "Income: ";
-	std::cin >> dollars;
-    std::ofstream incfile("Income");
-	incfile << dollars;
-	incfile.close();
-
-    menu();
 }
 void balance(){
 	double income;
@@ -133,12 +153,16 @@ void balance(){
         else{
         total += amounts;
         }
-        read.close();
     }
+    read.close();
 	balance = income - total;
 	std::cout << "\nBalance: " << balance << std::endl;	
 
     menu();
+}
+
+int exit(){
+    return 0;
 }
 
 
